@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RecieptChart</string>
+    <string name="capture_button">撮影</string>
+    <string name="item_receipt_capture">レシート読み取り</string>
 </resources>
