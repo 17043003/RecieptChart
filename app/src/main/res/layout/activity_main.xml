@@ -44,6 +44,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/menu_drawer" />
+        app:menu="@menu/menu_drawer"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/fragment_navigation"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

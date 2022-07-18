@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
 import com.ishzk.android.recieptchart.databinding.FragmentChartBinding
 
-class ChartFragment: Fragment() {
+class ChartFragment: NavHostFragment() {
     private var _binding: FragmentChartBinding? = null
     private val binding get() = _binding!!
 
