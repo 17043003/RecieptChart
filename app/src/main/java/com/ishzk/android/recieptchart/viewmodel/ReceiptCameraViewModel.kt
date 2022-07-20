@@ -6,6 +6,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.ishzk.android.recieptchart.context
@@ -37,6 +38,17 @@ class ReceiptCameraViewModel(application: Application) : AndroidViewModel(applic
 
     fun pickImageFile(){
         Log.d(TAG, "Select image floating button is pushed.")
+    }
+
+    val saveImageCallback = object : ImageCapture.OnImageSavedCallback{
+        override fun onError(exception: ImageCaptureException) {
+            Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
+        }
+
+        override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+            val msg = "Photo capture succeeded: ${outputFileResults.savedUri}"
+            Log.d(TAG, msg)
+        }
     }
 
     companion object{

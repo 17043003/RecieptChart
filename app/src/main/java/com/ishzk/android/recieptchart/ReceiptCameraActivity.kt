@@ -42,18 +42,7 @@ class ReceiptCameraActivity: AppCompatActivity() {
             imageCapture.takePicture(
                 it,
                 ContextCompat.getMainExecutor(this),
-                object : ImageCapture.OnImageSavedCallback{
-                    override fun onError(exception: ImageCaptureException) {
-                        Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
-                    }
-
-                    override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                        val msg = "Photo capture succeeded: ${outputFileResults.savedUri}"
-                        Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                        Log.d(TAG, msg)
-                    }
-                }
-
+                viewModel.saveImageCallback
             )
         }
         binding.viewModel = viewModel
