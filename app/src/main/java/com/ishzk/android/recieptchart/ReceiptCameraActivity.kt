@@ -1,6 +1,7 @@
 package com.ishzk.android.recieptchart
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -10,10 +11,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.AndroidViewModel
 import com.ishzk.android.recieptchart.databinding.ActivityCameraBinding
 import com.ishzk.android.recieptchart.viewmodel.ReceiptCameraViewModel
 import java.lang.Exception
@@ -33,6 +36,26 @@ class ReceiptCameraActivity: AppCompatActivity() {
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // After capture button clicked.
+        viewModel.cameraOutputOptions.observe(this){
+            val imageCapture = imageCapture ?: return@observe
+            imageCapture.takePicture(
+                it,
+                ContextCompat.getMainExecutor(this),
+                object : ImageCapture.OnImageSavedCallback{
+                    override fun onError(exception: ImageCaptureException) {
+                        Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
+                    }
+
+                    override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                        val msg = "Photo capture succeeded: ${outputFileResults.savedUri}"
+                        Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                        Log.d(TAG, msg)
+                    }
+                }
+
+            )
+        }
         binding.viewModel = viewModel
 
         if(allPermissionsGranted()){
@@ -42,7 +65,6 @@ class ReceiptCameraActivity: AppCompatActivity() {
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
         }
-
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
@@ -59,11 +81,13 @@ class ReceiptCameraActivity: AppCompatActivity() {
                 .build()
                 .also { it.setSurfaceProvider(binding.viewFinder.surfaceProvider) }
 
+            imageCapture = ImageCapture.Builder().build()
+
             // select back camera as default.
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             try{
                 cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview)
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
             }catch (e: Exception){
                 Log.e(TAG, "Use case binding failed.", e)
             }
@@ -103,3 +127,8 @@ class ReceiptCameraActivity: AppCompatActivity() {
         }.toTypedArray()
     }
 }
+
+val AndroidViewModel.context: Context
+  get() = getApplication()
+
+
