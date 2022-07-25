@@ -2,6 +2,7 @@ package com.ishzk.android.recieptchart.viewmodel
 
 import android.app.Application
 import android.content.ContentValues
+import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
@@ -17,6 +18,7 @@ const val TAG = "ReceiptCameraViewModel"
 
 class ReceiptCameraViewModel(application: Application) : AndroidViewModel(application) {
     val cameraOutputOptions = MutableLiveData<ImageCapture.OutputFileOptions>()
+    val takenPictureUri = MutableLiveData<Uri>()
 
     fun captureReceipt(){
         Log.d(TAG, "Capture button is touched.")
@@ -48,6 +50,8 @@ class ReceiptCameraViewModel(application: Application) : AndroidViewModel(applic
         override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
             val msg = "Photo capture succeeded: ${outputFileResults.savedUri}"
             Log.d(TAG, msg)
+
+            takenPictureUri.value = outputFileResults.savedUri
         }
     }
 

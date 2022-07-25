@@ -3,15 +3,16 @@ package com.ishzk.android.recieptchart
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
@@ -26,6 +27,7 @@ import java.util.concurrent.Executors
 class ReceiptCameraActivity: AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
     private val viewModel: ReceiptCameraViewModel by viewModels()
+    private val characterRecognition = CharacterRecognition()
 
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
@@ -45,6 +47,16 @@ class ReceiptCameraActivity: AppCompatActivity() {
                 viewModel.saveImageCallback
             )
         }
+
+        // After succeeded save image.
+        viewModel.takenPictureUri.observe(this){
+            var bitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, it)
+            val scaledBitmap = characterRecognition.scaleBitmapDown(bitmap, 640)
+            val base64Bitmap = characterRecognition.encode2Base64(scaledBitmap)
+            val request = characterRecognition.createRequest(base64Bitmap)
+            characterRecognition.recognition(request)
+        }
+
         binding.viewModel = viewModel
 
         if(allPermissionsGranted()){
