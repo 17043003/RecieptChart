@@ -5,11 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.ishzk.android.recieptchart.auth.Authentication
 import com.ishzk.android.recieptchart.databinding.ActivityMainBinding
 import com.ishzk.android.recieptchart.fragment.ChartFragment
+import com.ishzk.android.recieptchart.fragment.HouseholdFragment
 import com.ishzk.android.recieptchart.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -39,10 +43,11 @@ class MainActivity : AppCompatActivity() {
         binding.root.addDrawerListener(toggle)
         toggle.syncState()
 
-        // navigation menu setting.
-        val navHostFragment =
-            supportFragmentManager.fragments[0] as ChartFragment
-        val navController = navHostFragment.navController
+        // bottom navigation setting.
+        val navController = (supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment).navController
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
+
+        // drawer navigation menu setting.
         binding.navigationMenu.setupWithNavController(navController)
         binding.navigationMenu.setNavigationItemSelectedListener {
             when(it.itemId){

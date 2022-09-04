@@ -4,4 +4,6 @@
     <string name="item_receipt_capture">レシート読み取り</string>
     <string name="drawer_menu_header">表示切り替え</string>
     <string name="floating_button_image">画像ファイル選択</string>
+    <string name="bottom_table">表</string>
+    <string name="bottom_chart">グラフ</string>
 </resources>

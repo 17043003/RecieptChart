@@ -4,12 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
-import com.ishzk.android.recieptchart.databinding.FragmentChartBinding
+import com.ishzk.android.recieptchart.databinding.FragmentHouseholdBinding
 
-class ChartFragment: Fragment() {
-    private var _binding: FragmentChartBinding? = null
+class HouseholdFragment: NavHostFragment() {
+    private var _binding: FragmentHouseholdBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,13 +16,12 @@ class ChartFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentChartBinding.inflate(inflater, container, false)
-
+        _binding = FragmentHouseholdBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
 
         _binding = null
     }
