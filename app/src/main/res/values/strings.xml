@@ -6,4 +6,5 @@
     <string name="floating_button_image">画像ファイル選択</string>
     <string name="bottom_table">表</string>
     <string name="bottom_chart">グラフ</string>
+    <string name="NewHouseholdButton">New</string>
 </resources>

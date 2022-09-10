@@ -5,11 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
-import com.ishzk.android.recieptchart.databinding.FragmentHouseholdBinding
+import com.ishzk.android.recieptchart.databinding.FragmentNewHouseholdBinding
 
-class HouseholdFragment: Fragment() {
-    private var _binding: FragmentHouseholdBinding? = null
+class NewHouseholdFragment: Fragment() {
+    private var _binding: FragmentNewHouseholdBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,12 +16,7 @@ class HouseholdFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentHouseholdBinding.inflate(layoutInflater, container, false)
-
-        binding.newHouseholdButton.setOnClickListener { view ->
-            view.findNavController().
-            navigate(HouseholdFragmentDirections.actionHouseholdFragmentToNewHouseholdFragment())
-        }
+        _binding = FragmentNewHouseholdBinding.inflate(inflater, container, false)
 
         return binding.root
     }
