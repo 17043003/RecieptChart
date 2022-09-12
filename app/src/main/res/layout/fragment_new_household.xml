@@ -1,6 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ishzk.android.recieptchart.viewmodel.NewHouseholdViewModel" />
+        <import type="com.ishzk.android.recieptchart.model.Converter"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/costText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:ems="3"
+            android:gravity="center|end"
+            android:minHeight="48dp"
+            android:text="@string/Cost"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/editItemCost"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editItemCost"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/CostHint"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:textColorHint="#546E7A"
+            android:text="@={Converter.toString(viewModel.cost)}"
+            app:layout_constraintHorizontal_weight="5"
+            app:layout_constraintStart_toEndOf="@+id/costText"
+            app:layout_constraintTop_toTopOf="@+id/costText" />
+
+        <TextView
+            android:id="@+id/kindText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="3"
+            android:gravity="center|end"
+            android:minHeight="48dp"
+            android:text="@string/Kind"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/costText"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toStartOf="@+id/costText"
+            app:layout_constraintTop_toBottomOf="@+id/costText" />
+
+        <Spinner
+            android:id="@+id/selectItemKind"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:autofillHints=""
+            android:contentDescription="@string/ItemKindDescription"
+            android:ems="10"
+            android:hint="@string/KindHint"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:textColorHint="#546E7A"
+            android:entries="@{viewModel.kinds}"
+            android:selectedItemPosition="@={viewModel.selectedKindPosition}"
+            app:layout_constraintEnd_toEndOf="@+id/editItemCost"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_weight="5"
+            app:layout_constraintStart_toStartOf="@+id/editItemCost"
+            app:layout_constraintTop_toTopOf="@+id/kindText" />
+
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="3"
+            android:gravity="center|end"
+            android:minHeight="48dp"
+            android:text="@string/Date"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/costText"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toStartOf="@+id/costText"
+            app:layout_constraintTop_toBottomOf="@+id/kindText" />
+
+        <EditText
+            android:id="@+id/editItemDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/DateHint"
+            android:inputType="date"
+            android:minHeight="48dp"
+            android:textColorHint="#546E7A"
+            android:text="@{viewModel.selectedDate.toString()}"
+            app:layout_constraintStart_toStartOf="@+id/selectItemKind"
+            app:layout_constraintTop_toTopOf="@+id/dateText" />
+
+        <Button
+            android:id="@+id/itemSaveButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:onClick="@{() -> viewModel.createItem()}"
+            android:text="@string/ItemSaveButtonText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editItemDate" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

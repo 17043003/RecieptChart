@@ -1,5 +1,6 @@
 package com.ishzk.android.recieptchart
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,7 +24,13 @@ class MainActivity : AppCompatActivity() {
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
     ) { res ->
-        viewModel.currentUser = authentication.onSignInResult(res)
+        val userID = authentication.onSignInResult(res)?.uid
+        val sharedPref = this.getSharedPreferences(
+            getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        with (sharedPref.edit()) {
+            putString(getString(R.string.user_id), userID)
+            apply()
+        }
     }
 
     lateinit var binding: ActivityMainBinding
