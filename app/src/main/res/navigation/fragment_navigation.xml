@@ -3,22 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_navigation"
-    app:startDestination="@id/householdFragment">
-    <fragment
-        android:id="@+id/householdFragment"
-        android:name="com.ishzk.android.recieptchart.fragment.HouseholdFragment"
-        android:label="HouseholdFragment" >
-        <action
-            android:id="@+id/action_householdFragment_to_newHouseholdFragment"
-            app:destination="@id/newHouseholdFragment"
-            app:popUpToInclusive="false" />
-    </fragment>
+    app:startDestination="@id/itemListGraph">
     <fragment
         android:id="@+id/chartFragment"
         android:name="com.ishzk.android.recieptchart.fragment.ChartFragment"
         android:label="ChartFragment" />
-    <fragment
-        android:id="@+id/newHouseholdFragment"
-        android:name="com.ishzk.android.recieptchart.fragment.NewHouseholdFragment"
-        android:label="NewHouseholdFragment" />
+    <navigation android:id="@+id/itemListGraph"
+        app:startDestination="@id/householdFragment">
+        <fragment
+            android:id="@+id/householdFragment"
+            android:name="com.ishzk.android.recieptchart.fragment.HouseholdFragment"
+            android:label="HouseholdFragment">
+            <action
+                android:id="@+id/action_householdFragment_to_newHouseholdFragment"
+                app:destination="@id/newHouseholdFragment"
+                app:popUpToInclusive="false" />
+        </fragment>
+        <fragment
+            android:id="@+id/newHouseholdFragment"
+            android:name="com.ishzk.android.recieptchart.fragment.NewHouseholdFragment"
+            android:label="NewHouseholdFragment" />
+    </navigation>
 </navigation>
