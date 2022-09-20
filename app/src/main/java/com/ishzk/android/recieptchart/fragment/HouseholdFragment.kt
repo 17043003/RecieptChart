@@ -15,6 +15,7 @@ import com.ishzk.android.recieptchart.SharedPreference
 import com.ishzk.android.recieptchart.databinding.FragmentHouseholdBinding
 import com.ishzk.android.recieptchart.databinding.ItemRecyclerviewBinding
 import com.ishzk.android.recieptchart.model.Household
+import com.ishzk.android.recieptchart.repository.FirestoreRepository
 import com.ishzk.android.recieptchart.viewmodel.HouseholdViewModel
 import kotlinx.coroutines.launch
 
@@ -39,6 +40,9 @@ class HouseholdFragment: Fragment() {
 
         viewModel._userID = SharedPreference(requireActivity())
             .getValue(getString(R.string.preference_file_key), getString(R.string.user_id))
+
+        // set using repository to fetch data.
+        viewModel._repository = FirestoreRepository()
 
         // init recycler view.
         binding.recyclerView.apply {

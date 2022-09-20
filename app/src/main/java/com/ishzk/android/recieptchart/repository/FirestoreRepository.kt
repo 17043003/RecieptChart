@@ -8,10 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
-class FirestoreRepository {
+class FirestoreRepository: HouseholdRepository {
     private val db by lazy { Firebase.firestore }
 
-    fun addItem(item: Household){
+    override fun addItem(item: Household){
 
         db.collection("users")
             .document(item.userId)
@@ -25,7 +25,7 @@ class FirestoreRepository {
             }
     }
 
-    suspend fun fetchItems(userID: String): List<Household> {
+    override suspend fun fetchItems(userID: String): List<Household> {
         val itemList = mutableListOf<Household>()
 
         if(userID.isEmpty()) return itemList
