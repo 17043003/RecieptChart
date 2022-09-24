@@ -13,7 +13,7 @@ import java.time.LocalTime
 
 class NewHouseholdViewModel: ViewModel() {
     val cost by lazy { MutableLiveData<Int?>() }
-    val kinds: List<String> = ItemKind.values
+    val kinds: List<String> = ItemKind.values().map { it.kind }
     val selectedKindPosition by lazy { MutableLiveData<Int>() }
     val selectedDate by lazy { MutableLiveData<LocalDate>() }
     private val _hasAddedItem = MutableStateFlow(false)
@@ -29,7 +29,7 @@ class NewHouseholdViewModel: ViewModel() {
         val repository = FirestoreRepository()
         repository.addItem(Household("", cost.value ?: 0,
             LocalDateTime.of( selectedDate.value ?: LocalDate.now(), LocalTime.now()),
-            ItemKind.values[selectedKindPosition.value ?: 0],
+            ItemKind.values()[selectedKindPosition.value ?: 0].kind,
             "",
             userID
         ))
