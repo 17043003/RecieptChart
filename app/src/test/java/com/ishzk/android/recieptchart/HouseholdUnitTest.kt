@@ -2,7 +2,7 @@ package com.ishzk.android.recieptchart
 
 import com.ishzk.android.recieptchart.model.Converter
 import com.ishzk.android.recieptchart.model.Household
-import com.ishzk.android.recieptchart.repository.HouseholdRepository
+import com.ishzk.android.recieptchart.model.HouseholdRepository
 import com.ishzk.android.recieptchart.viewmodel.HouseholdViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first

@@ -1,6 +1,4 @@
-package com.ishzk.android.recieptchart.repository
-
-import com.ishzk.android.recieptchart.model.Household
+package com.ishzk.android.recieptchart.model
 
 interface HouseholdRepository {
     fun addItem(item: Household)

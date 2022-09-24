@@ -2,7 +2,7 @@ package com.ishzk.android.recieptchart.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.ishzk.android.recieptchart.model.Household
-import com.ishzk.android.recieptchart.repository.HouseholdRepository
+import com.ishzk.android.recieptchart.model.HouseholdRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
