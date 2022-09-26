@@ -18,7 +18,7 @@ import com.ishzk.android.recieptchart.model.Household
 import com.ishzk.android.recieptchart.repository.FirestoreRepository
 import com.ishzk.android.recieptchart.viewmodel.HouseholdViewModel
 import kotlinx.coroutines.launch
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
 
 class HouseholdFragment: Fragment() {
     private var _binding: FragmentHouseholdBinding? = null
@@ -95,8 +95,8 @@ class ItemListViewHolder(private val binding: ItemRecyclerviewBinding):
     RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Household){
             binding.apply {
-                val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
-                itemDateText.text = item.date.format(formatter)
+                val formatter = SimpleDateFormat("yyyy/MM/dd")
+                itemDateText.text = formatter.format(item.date.toDate())
                 itemCostText.text = item.cost.toString()
                 itemKindText.text = item.kind
                 itemDescriptionText.text = item.description

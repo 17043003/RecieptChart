@@ -2,14 +2,15 @@ package com.ishzk.android.recieptchart.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.Timestamp
 import com.ishzk.android.recieptchart.model.Household
 import com.ishzk.android.recieptchart.model.ItemKind
 import com.ishzk.android.recieptchart.repository.FirestoreRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import java.time.ZoneId
+import java.util.*
 
 class NewHouseholdViewModel: ViewModel() {
     val cost by lazy { MutableLiveData<Int?>() }
@@ -27,8 +28,11 @@ class NewHouseholdViewModel: ViewModel() {
 
     fun createItem(){
         val repository = FirestoreRepository()
+        val currentLocalDate = selectedDate.value ?: LocalDate.now()
+        val currentDate = Date.from(currentLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val timeStamp = Timestamp(currentDate)
         repository.addItem(Household("", cost.value ?: 0,
-            LocalDateTime.of( selectedDate.value ?: LocalDate.now(), LocalTime.now()),
+            timeStamp,
             ItemKind.values()[selectedKindPosition.value ?: 0].kind,
             "",
             userID

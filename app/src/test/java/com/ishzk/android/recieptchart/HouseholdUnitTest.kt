@@ -1,5 +1,6 @@
 package com.ishzk.android.recieptchart
 
+import com.google.firebase.Timestamp
 import com.ishzk.android.recieptchart.model.Converter
 import com.ishzk.android.recieptchart.model.Household
 import com.ishzk.android.recieptchart.model.HouseholdRepository
@@ -12,6 +13,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import java.time.LocalDateTime
+import java.util.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -32,7 +34,7 @@ class HouseholdUnitTest {
     @Test
     @kotlinx.coroutines.ExperimentalCoroutinesApi
     fun fetchItemsNormalTest(){
-        val item = Household("1", 1234, LocalDateTime.now(), "Consume", "", "me")
+        val item = Household("1", 1234, Timestamp(Date()), "Consume", "", "me")
         val viewModel = HouseholdViewModel()
         val repository = object: HouseholdRepository {
             override fun addItem(item: Household) {}

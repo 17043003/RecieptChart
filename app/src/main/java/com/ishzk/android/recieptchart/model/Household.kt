@@ -1,14 +1,14 @@
 package com.ishzk.android.recieptchart.model
 
 import androidx.databinding.InverseMethod
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
-import java.time.LocalDateTime
 
 data class Household(
     @DocumentId
     val id: String = "",
     val cost: Int,
-    val date: LocalDateTime,
+    val date: Timestamp,
     val kind: String,
     val description: String = "",
     val userId: String

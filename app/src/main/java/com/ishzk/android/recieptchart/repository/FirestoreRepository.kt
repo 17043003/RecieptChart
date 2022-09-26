@@ -1,13 +1,13 @@
 package com.ishzk.android.recieptchart.repository
 
 import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.ishzk.android.recieptchart.model.Household
 import com.ishzk.android.recieptchart.model.HouseholdRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
 
 class FirestoreRepository: HouseholdRepository {
     private val db by lazy { Firebase.firestore }
@@ -54,16 +54,12 @@ class FirestoreRepository: HouseholdRepository {
             result.result.documents.map {
                 it.data ?: return@map
 
-                val dateHash = it.data?.get("date") as HashMap<*, *>? ?: return@map
-                val year = (dateHash["year"] as Long).toInt()
-                val month = (dateHash["monthValue"] as Long).toInt()
-                val day = (dateHash["dayOfMonth"] as Long).toInt()
-                val date = LocalDateTime.of(year, month, day, 0, 0)
+                val timeStamp = it.data?.get("date") as Timestamp
 
                 val item = Household(
                     it.id,
                     it.data?.get("cost").toString().toIntOrNull() ?: 0,
-                    date,
+                    timeStamp,
                     it.data?.get("kind").toString(),
                     "",
                     it.data?.get("userID").toString()
