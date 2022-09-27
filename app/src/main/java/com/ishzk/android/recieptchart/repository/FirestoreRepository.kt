@@ -8,6 +8,7 @@ import com.ishzk.android.recieptchart.model.Household
 import com.ishzk.android.recieptchart.model.HouseholdRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class FirestoreRepository: HouseholdRepository {
     private val db by lazy { Firebase.firestore }
@@ -31,11 +32,12 @@ class FirestoreRepository: HouseholdRepository {
 
         if(userID.isEmpty()) return itemList
 
-        withContext(Dispatchers.Default) {
+        return withContext(Dispatchers.Default) {
 
             val result = db.collection("users")
                 .document(userID)
                 .collection("items")
+                .orderBy("date")
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
@@ -66,9 +68,48 @@ class FirestoreRepository: HouseholdRepository {
                 )
                 itemList.add(item)
             }
+            itemList
         }
+    }
 
-        return itemList
+    override suspend fun fetchPeriodicItems(
+        userID: String,
+        start: Date,
+        end: Date
+    ): List<Household> {
+        val itemList = mutableListOf<Household>()
+
+        if(userID.isEmpty()) return itemList
+
+        return withContext(Dispatchers.Default) {
+            val result = db.collection("users")
+                .document(userID)
+                .collection("items")
+                .orderBy("date")
+                .startAt(Timestamp(start))
+                .endAt(Timestamp(end))
+                .get()
+
+            while (!result.isComplete) {
+            }
+
+            result.result.documents.map {
+                it.data ?: return@map
+
+                val timeStamp = it.data?.get("date") as Timestamp
+
+                val item = Household(
+                    it.id,
+                    it.data?.get("cost").toString().toIntOrNull() ?: 0,
+                    timeStamp,
+                    it.data?.get("kind").toString(),
+                    "",
+                    it.data?.get("userID").toString()
+                )
+                itemList.add(item)
+            }
+            itemList
+        }
     }
 
     companion object {

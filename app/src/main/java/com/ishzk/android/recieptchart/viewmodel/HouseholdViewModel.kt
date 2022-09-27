@@ -7,6 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.util.*
 
 class HouseholdViewModel: ViewModel() {
     var _repository: HouseholdRepository? = null
@@ -20,4 +22,21 @@ class HouseholdViewModel: ViewModel() {
             emit(items)
         }
     }
+
+    suspend fun fetchBetweenItems(start: Date, end: Date): Flow<List<Household>> = withContext(Dispatchers.Default) {
+        flow {
+            val userID = _userID
+            val items = repository.fetchPeriodicItems(userID, start, end)
+            emit(items)
+        }
+    }
+
+    suspend fun fetchTodayItems(today: Date): Flow<List<Household>> = withContext(Dispatchers.Default) {
+        val start = today.beginDay()
+        val end = today.endDay()
+        fetchBetweenItems(start, end)
+    }
 }
+
+fun Date.beginDay(): Date = Date(year, month, date, 0, 0)
+fun Date.endDay(): Date = Date(year, month, date, 23, 59)

@@ -41,6 +41,14 @@ class HouseholdUnitTest {
 
             override suspend fun fetchItems(userID: String): List<Household> =
                 listOf(item)
+
+            override suspend fun fetchPeriodicItems(
+                userID: String,
+                start: Date,
+                end: Date
+            ): List<Household> {
+                return listOf(item)
+            }
         }
         viewModel._repository = repository
         runTest {

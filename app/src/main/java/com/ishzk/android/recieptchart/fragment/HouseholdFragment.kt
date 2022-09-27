@@ -19,6 +19,7 @@ import com.ishzk.android.recieptchart.repository.FirestoreRepository
 import com.ishzk.android.recieptchart.viewmodel.HouseholdViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.*
 
 class HouseholdFragment: Fragment() {
     private var _binding: FragmentHouseholdBinding? = null
@@ -62,7 +63,7 @@ class HouseholdFragment: Fragment() {
 
         // fetch items on recycler view.
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.fetchItems().collect{
+            viewModel.fetchTodayItems(Date()).collect{
                 Log.d(TAG, "${it.size}")
                 listAdapter.submitList(it)
             }
