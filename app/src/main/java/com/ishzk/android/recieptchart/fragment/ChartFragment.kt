@@ -47,20 +47,12 @@ class ChartFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             val today = Date()
             viewModel.fetchWeekItems(today).collect{
-                val sumEachDay = it.groupBy { it.date }.map {
-                    it.key to it.value.sumOf { it.cost }
-                }.toMap()
+                val x = (0..it.size).toList().map { it.toFloat() } // X軸データ
+                val chartData = BarChartData()
+                val dataSet = chartData.prepareData(x, it.map { cost -> cost.toFloat() })
+                val barData = chartData.prepareDataset(dataSet)
 
                 val days = today.daysOfWeek()
-                val costs: List<Int> = (0..6).map { i ->
-                    if(Timestamp(days[i]) in sumEachDay) sumEachDay[Timestamp(days[i])] ?: 0
-                    else 0
-                }
-
-                val x = (0..6).toList().map { it.toFloat() } // X軸データ
-                val chartData = BarChartData()
-                val dataSet = chartData.prepareData(x, costs.map { cost -> cost.toFloat() })
-                val barData = chartData.prepareDataset(dataSet)
                 binding.dailyBarChart.apply {
                     data = barData
                     xAxis.isEnabled = true

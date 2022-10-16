@@ -1,6 +1,7 @@
 package com.ishzk.android.recieptchart.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.ishzk.android.recieptchart.model.FetchWeeklySumOfCostUseCase
 import com.ishzk.android.recieptchart.model.Household
 import com.ishzk.android.recieptchart.model.HouseholdRepository
 import kotlinx.coroutines.Dispatchers
@@ -16,23 +17,18 @@ class ChartFragmentViewModel: ViewModel() {
     private val repository by lazy { _repository!! }
     var _userID = ""
 
-    private suspend fun fetchBetweenItems(start: Date, end: Date): Flow<List<Household>> = withContext(
+    private suspend fun fetchBetweenItems(start: Date, end: Date): List<Household> = withContext(
         Dispatchers.Default) {
+        val userID = _userID
+        repository.fetchPeriodicItems(userID, start, end)
+    }
+
+    suspend fun fetchWeekItems(today: Date): Flow<List<Int>> = withContext(Dispatchers.Default) {
+        val useCase = FetchWeeklySumOfCostUseCase()
+        useCase.repository = repository
         flow {
-            val userID = _userID
-            val items = repository.fetchPeriodicItems(userID, start, end)
-            emit(items)
+            emit(useCase(_userID, today))
         }
-    }
-
-    suspend fun fetchTodayItems(today: Date): Flow<List<Household>> = withContext(Dispatchers.Default) {
-        val start = today.beginDay()
-        val end = today.endDay()
-        fetchBetweenItems(start, end)
-    }
-
-    suspend fun fetchWeekItems(today: Date): Flow<List<Household>> = withContext(Dispatchers.Default) {
-        fetchBetweenItems(today.beginDayOfWeek(), today.endDayOfWeek().endDay())
     }
 }
 
