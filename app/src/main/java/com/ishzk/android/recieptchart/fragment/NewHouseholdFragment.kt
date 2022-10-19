@@ -41,8 +41,8 @@ class NewHouseholdFragment: Fragment() {
         viewModel.selectedDate.value = today
         binding.editItemDate.setOnClickListener {
             DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener { _, y, m, d ->
-                viewModel.selectedDate.value = LocalDate.of(y, m, d)
-            }, today.year, today.monthValue, today.dayOfMonth).show()
+                viewModel.selectedDate.value = LocalDate.of(y, m + 1, d)
+            }, today.year, today.monthValue - 1, today.dayOfMonth).show()
         }
 
         lifecycleScope.launch{
