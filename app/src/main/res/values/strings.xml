@@ -18,4 +18,6 @@
     <string name="Date">日付：</string>
     <string name="DateHint">日付を入力</string>
     <string name="ItemSaveButtonText">保存</string>
+    <string name="Detail">詳細：</string>
+    <string name="DetailHint">詳細を入力</string>
 </resources>

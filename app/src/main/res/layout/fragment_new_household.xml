@@ -42,8 +42,9 @@
             android:hint="@string/CostHint"
             android:inputType="number"
             android:minHeight="48dp"
-            android:textColorHint="#546E7A"
             android:text="@={Converter.toString(viewModel.cost)}"
+            android:textColorHint="#546E7A"
+            android:textCursorDrawable="@drawable/cursor"
             app:layout_constraintHorizontal_weight="5"
             app:layout_constraintStart_toEndOf="@+id/costText"
             app:layout_constraintTop_toTopOf="@+id/costText" />
@@ -111,8 +112,9 @@
             android:hint="@string/DateHint"
             android:inputType="date"
             android:minHeight="48dp"
-            android:textColorHint="#546E7A"
             android:text="@{viewModel.selectedDate.toString()}"
+            android:textColorHint="#546E7A"
+            android:textCursorDrawable="@drawable/cursor"
             app:layout_constraintStart_toStartOf="@+id/selectItemKind"
             app:layout_constraintTop_toTopOf="@+id/dateText" />
 
@@ -126,8 +128,40 @@
             android:onClick="@{() -> viewModel.createItem()}"
             android:text="@string/ItemSaveButtonText"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editItemDate" />
+            app:layout_constraintTop_toBottomOf="@+id/editDetailText" />
+
+        <EditText
+            android:id="@+id/editDetailText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:gravity="start|top"
+            android:hint="@string/DetailHint"
+            android:inputType="textMultiLine"
+            android:minHeight="192dp"
+            android:textColorHint="#546E7A"
+            android:textCursorDrawable="@drawable/cursor"
+            android:textSize="18sp"
+            android:text="@={viewModel.detail}"
+            app:layout_constraintEnd_toEndOf="@+id/editItemDate"
+            app:layout_constraintStart_toStartOf="@+id/detailText"
+            app:layout_constraintTop_toBottomOf="@+id/detailText" />
+
+        <TextView
+            android:id="@+id/detailText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="3"
+            android:gravity="center|end"
+            android:minHeight="48dp"
+            android:text="@string/Detail"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/dateText"
+            app:layout_constraintStart_toStartOf="@+id/dateText"
+            app:layout_constraintTop_toBottomOf="@+id/dateText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

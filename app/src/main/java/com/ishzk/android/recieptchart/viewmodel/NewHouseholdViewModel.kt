@@ -17,6 +17,7 @@ class NewHouseholdViewModel: ViewModel() {
     val kinds: List<String> = ItemKind.values().map { it.kind }
     val selectedKindPosition by lazy { MutableLiveData<Int>() }
     val selectedDate by lazy { MutableLiveData<LocalDate>() }
+    val detail by lazy { MutableLiveData<String>() }
     private val _hasAddedItem = MutableStateFlow(false)
     val hasAddedItem = _hasAddedItem.asStateFlow()
 
@@ -34,7 +35,7 @@ class NewHouseholdViewModel: ViewModel() {
         repository.addItem(Household("", cost.value ?: 0,
             timeStamp,
             ItemKind.values()[selectedKindPosition.value ?: 0].kind,
-            "",
+            detail.value ?: "",
             userID
         ))
 
