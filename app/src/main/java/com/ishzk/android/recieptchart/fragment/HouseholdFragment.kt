@@ -63,7 +63,7 @@ class HouseholdFragment: Fragment() {
 
         // fetch items on recycler view.
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.fetchTodayItems(Date()).collect{
+            viewModel.fetchMonthlyItems(Date()).collect{
                 Log.d(TAG, "${it.size}")
                 listAdapter.submitList(it)
             }

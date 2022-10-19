@@ -1,6 +1,7 @@
 package com.ishzk.android.recieptchart.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.ishzk.android.recieptchart.model.FetchMonthlyHouseholdsEachDayUseCase
 import com.ishzk.android.recieptchart.model.Household
 import com.ishzk.android.recieptchart.model.HouseholdRepository
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +36,16 @@ class HouseholdViewModel: ViewModel() {
         val start = today.beginDay()
         val end = today.endDay()
         fetchBetweenItems(start, end)
+    }
+
+    suspend fun fetchMonthlyItems(today: Date): Flow<List<Household>> = withContext(Dispatchers.Default) {
+        flow {
+            val userID = _userID
+            val usecase = FetchMonthlyHouseholdsEachDayUseCase()
+            usecase.repository = repository
+            val items = usecase(userID, today)
+            emit(items)
+        }
     }
 }
 
