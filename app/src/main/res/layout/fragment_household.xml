@@ -4,7 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
+        <import type="android.view.View" />
+        <variable
+            name="view_model"
+            type="com.ishzk.android.recieptchart.viewmodel.HouseholdViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,5 +43,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/fetchingProgressBar"
+            android:layout_width="403dp"
+            android:layout_height="432dp"
+            android:indeterminateTint="@color/gray_600"
+            android:visibility="@{view_model.isFetching ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/newHouseholdButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectYearMonth" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

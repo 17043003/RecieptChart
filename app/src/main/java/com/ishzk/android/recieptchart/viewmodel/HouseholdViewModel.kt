@@ -1,5 +1,6 @@
 package com.ishzk.android.recieptchart.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ishzk.android.recieptchart.model.FetchMonthlyHouseholdsEachDayUseCase
 import com.ishzk.android.recieptchart.model.Household
@@ -15,6 +16,7 @@ class HouseholdViewModel: ViewModel() {
     var _repository: HouseholdRepository? = null
     private val repository by lazy { _repository!! }
     var _userID = ""
+    val isFetching by lazy { MutableLiveData(false) }
 
     suspend fun fetchItems(): Flow<List<Household>> = withContext(Dispatchers.Default) {
         flow {

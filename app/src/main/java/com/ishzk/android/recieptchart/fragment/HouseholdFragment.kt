@@ -35,6 +35,9 @@ class HouseholdFragment: Fragment() {
     ): View? {
         _binding = FragmentHouseholdBinding.inflate(layoutInflater, container, false)
 
+        binding.lifecycleOwner = this
+        binding.viewModel = this.viewModel
+
         binding.newHouseholdButton.setOnClickListener { view ->
             view.findNavController().
             navigate(HouseholdFragmentDirections.actionHouseholdFragmentToNewHouseholdFragment())
@@ -71,11 +74,14 @@ class HouseholdFragment: Fragment() {
         // fetch items on recycler view.
         binding.selectYearMonth.selectedMonth.observe(viewLifecycleOwner){
             viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.isFetching.value = true
+
                 viewModel.fetchMonthlyItems(binding.selectYearMonth.selectedDate).collect{
-                    Log.d(TAG, "${it.size}")
                     Log.d(TAG, "Fetch date: ${binding.selectYearMonth.selectedDate}")
                     listAdapter.submitList(it)
                 }
+
+                viewModel.isFetching.value = false
             }
         }
     }
