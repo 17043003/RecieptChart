@@ -55,6 +55,13 @@ class HouseholdFragment: Fragment() {
             addItemDecoration(decorator)
         }
 
+        // set initial date to select year month custom view.
+        with(binding.selectYearMonth) {
+            val today = Date()
+            selectedYear.value = today.year + 1900
+            selectedMonth.value = today.month
+        }
+
         return binding.root
     }
 
@@ -62,10 +69,13 @@ class HouseholdFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // fetch items on recycler view.
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.fetchMonthlyItems(Date()).collect{
-                Log.d(TAG, "${it.size}")
-                listAdapter.submitList(it)
+        binding.selectYearMonth.selectedMonth.observe(viewLifecycleOwner){
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.fetchMonthlyItems(binding.selectYearMonth.selectedDate).collect{
+                    Log.d(TAG, "${it.size}")
+                    Log.d(TAG, "Fetch date: ${binding.selectYearMonth.selectedDate}")
+                    listAdapter.submitList(it)
+                }
             }
         }
     }
