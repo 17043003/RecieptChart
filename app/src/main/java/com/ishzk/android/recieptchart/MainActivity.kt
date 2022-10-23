@@ -16,6 +16,7 @@ import com.ishzk.android.recieptchart.databinding.ActivityMainBinding
 import com.ishzk.android.recieptchart.fragment.ChartFragment
 import com.ishzk.android.recieptchart.fragment.HouseholdFragment
 import com.ishzk.android.recieptchart.viewmodel.MainViewModel
+import io.reactivex.rxjava3.internal.util.NotificationLite.getValue
 
 class MainActivity : AppCompatActivity() {
     private val authentication = Authentication()
@@ -76,7 +77,9 @@ class MainActivity : AppCompatActivity() {
 
         // show sign in ui.
         val signInIntent = authentication.createIntent()
-        if(viewModel.currentUser == null){
+        val userID = SharedPreference(this)
+            .getValue(getString(R.string.preference_file_key), getString(R.string.user_id))
+        if(userID.isEmpty()){
             signInLauncher.launch(signInIntent)
         }
     }
