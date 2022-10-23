@@ -16,7 +16,7 @@ class SelectYearMonthView : LinearLayout {
     val selectedYear by lazy { MutableLiveData<Int>() }
     val selectedMonth by lazy { MutableLiveData<Int>() }
     val selectedDate: Date
-        get() = Date((selectedYear.value ?: 2022) - 1900, selectedMonth.value ?: 1, 1)
+        get() = Date((selectedYear.value ?: 2022) - 1900, (selectedMonth.value ?: 1) - 1, 1)
 
     init {
         binding.nextMonthButton.setOnClickListener{
@@ -26,7 +26,7 @@ class SelectYearMonthView : LinearLayout {
             selectedMonth.value = if(currentMonth == 12) 1 else currentMonth + 1
             selectedYear.value = if(currentMonth == 12) currentYear + 1 else currentYear
 
-            binding.selectedYearMonthText.text = "${selectedYear.value}/${(selectedMonth.value ?: 1) + 1}"
+            binding.selectedYearMonthText.text = "${selectedYear.value}/${(selectedMonth.value ?: 1)}"
         }
 
         binding.previousMonthButton.setOnClickListener {
@@ -36,7 +36,7 @@ class SelectYearMonthView : LinearLayout {
             selectedMonth.value = if(currentMonth == 1) 12 else currentMonth - 1
             selectedYear.value = if(currentMonth == 1) currentYear - 1 else currentYear
 
-            binding.selectedYearMonthText.text = "${selectedYear.value}/${(selectedMonth.value ?: 1) + 1}"
+            binding.selectedYearMonthText.text = "${selectedYear.value}/${(selectedMonth.value ?: 1)}"
         }
 
         binding
@@ -65,6 +65,6 @@ class SelectYearMonthView : LinearLayout {
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        binding.selectedYearMonthText.text = "${selectedYear.value}/${(selectedMonth.value ?: 1) + 1}"
+        binding.selectedYearMonthText.text = "${selectedYear.value}/${(selectedMonth.value ?: 1)}"
     }
 }

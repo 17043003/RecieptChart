@@ -62,7 +62,7 @@ class HouseholdFragment: Fragment() {
         with(binding.selectYearMonth) {
             val today = Date()
             selectedYear.value = today.year + 1900
-            selectedMonth.value = today.month
+            selectedMonth.value = today.month + 1
         }
 
         return binding.root
