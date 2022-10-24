@@ -3,6 +3,7 @@ package com.ishzk.android.recieptchart.model
 import androidx.databinding.InverseMethod
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
+import java.util.*
 
 data class Household(
     @DocumentId
@@ -13,6 +14,9 @@ data class Household(
     val description: String = "",
     val userId: String
 ) {
+    companion object {
+        fun init(): Household = Household("", 0, Timestamp(Date()), ItemKind.Consume.kind, "", "")
+    }
 }
 
 enum class ItemKind(val kind: String){

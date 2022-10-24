@@ -15,16 +15,17 @@ class FirestoreRepository: HouseholdRepository {
 
     override fun addItem(item: Household){
 
-        db.collection("users")
+        val itemCollection = db.collection("users")
             .document(item.userId)
             .collection("items")
-            .add(item)
-            .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
-            }
+
+        if(item.id.isNotEmpty()) { // when edit item.
+            itemCollection
+                .document(item.id)
+                .set(item)
+        }else{ // when create new item.
+            itemCollection.add(item)
+        }
     }
 
     override suspend fun fetchItems(userID: String): List<Household> {
@@ -92,7 +93,6 @@ class FirestoreRepository: HouseholdRepository {
 
             while (!result.isComplete) {
             }
-
             result.result.documents.map {
                 it.data ?: return@map
 
@@ -109,6 +109,33 @@ class FirestoreRepository: HouseholdRepository {
                 itemList.add(item)
             }
             itemList
+        }
+    }
+
+    override suspend fun fetchItem(userID: String, itemID: String): Household? {
+        return withContext(Dispatchers.Default) {
+            val result = db.collection("users")
+                .document(userID)
+                .collection("items")
+                .document(itemID)
+                .get()
+
+            while (!result.isComplete) {
+            }
+
+            result.result.data?.let {
+
+                val timeStamp = it.get("date") as Timestamp
+
+                Household(
+                    itemID,
+                    it.get("cost").toString().toIntOrNull() ?: 0,
+                    timeStamp,
+                    it.get("kind").toString(),
+                    "",
+                    it.get("userID").toString()
+                )
+            }
         }
     }
 

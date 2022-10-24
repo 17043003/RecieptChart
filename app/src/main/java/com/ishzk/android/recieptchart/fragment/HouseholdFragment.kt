@@ -100,11 +100,13 @@ class HouseholdFragment: Fragment() {
 class ListItemAdapter: ListAdapter<Household, ItemListViewHolder>(DIFF_UTIL_ITEM_CALLBACK){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemListViewHolder {
         val view = ItemRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
         return ItemListViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ItemListViewHolder, position: Int) {
         holder.bind(getItem(position))
+        holder.setOnClickListener(getItem(position).id)
     }
 }
 
@@ -117,6 +119,12 @@ class ItemListViewHolder(private val binding: ItemRecyclerviewBinding):
                 itemCostText.text = item.cost.toString()
                 itemKindText.text = item.kind
                 itemDescriptionText.text = item.description
+            }
+        }
+        fun setOnClickListener(id: String){
+            binding.root.setOnClickListener {
+                it.findNavController().
+                navigate(HouseholdFragmentDirections.actionHouseholdFragmentToNewHouseholdFragment(id))
             }
         }
 }
