@@ -1,5 +1,25 @@
 name-template: 'v$NEXT_PATCH_VERSION'
 tag-template: 'v$NEXT_PATCH_VERSION'
+
+autolabeler:
+  - label: 'chore'
+    branch:
+      - '/chore\/.+/'
+    files:
+      - '*.md'
+  - label: 'enhancement'
+    branch:
+      - '/feature\/.+/'
+  - label: 'bug'
+    branch:
+      - '/fix\/.+/'
+  - label: 'refactor'
+    branch:
+      - '/refactor\/.+/'
+  - label: 'upgrade'
+    branch:
+      - '/(upgrade|update)\/.+/'
+
 categories:
   - title: '🚀 Features'
     labels:
@@ -13,6 +33,7 @@ categories:
   - title: '🧰 Maintenance'
     labels:
       - 'chore'
+      - 'refactor'
   - title: '📚 Documents'
     labels:
       - 'doc'
