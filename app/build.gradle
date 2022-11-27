@@ -74,6 +74,10 @@ dependencies {
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    implementation 'com.google.code.gson:gson:2.10'
+    implementation "com.michael-bull.kotlin-result:kotlin-result:1.1.16"
+    implementation "com.michael-bull.kotlin-result:kotlin-result-coroutines:1.1.16"
+
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'io.mockk:mockk:1.10.5'
     testImplementation 'androidx.arch.core:core-testing:2.1.0'

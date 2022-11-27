@@ -18,8 +18,12 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.lifecycleScope
+import com.github.michaelbull.result.getOrElse
 import com.ishzk.android.recieptchart.databinding.ActivityCameraBinding
+import com.ishzk.android.recieptchart.model.CapturedReceiptData
 import com.ishzk.android.recieptchart.viewmodel.ReceiptCameraViewModel
+import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -50,11 +54,15 @@ class ReceiptCameraActivity: AppCompatActivity() {
 
         // After succeeded save image.
         viewModel.takenPictureUri.observe(this){
-            var bitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, it)
+            val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, it)
             val scaledBitmap = characterRecognition.scaleBitmapDown(bitmap, 640)
             val base64Bitmap = characterRecognition.encode2Base64(scaledBitmap)
             val request = characterRecognition.createRequest(base64Bitmap)
-            characterRecognition.recognition(request)
+            lifecycleScope.launch {
+                val result = characterRecognition.recognition(request)
+                val receiptData: CapturedReceiptData = result.getOrElse { return@launch }
+                Log.d(TAG, receiptData.toString())
+            }
         }
 
         binding.viewModel = viewModel
