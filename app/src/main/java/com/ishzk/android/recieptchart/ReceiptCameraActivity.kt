@@ -2,6 +2,7 @@ package com.ishzk.android.recieptchart
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
@@ -20,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.lifecycleScope
 import com.github.michaelbull.result.getOrElse
+import com.google.gson.Gson
 import com.ishzk.android.recieptchart.databinding.ActivityCameraBinding
 import com.ishzk.android.recieptchart.model.CapturedReceiptData
 import com.ishzk.android.recieptchart.viewmodel.ReceiptCameraViewModel
@@ -62,6 +64,15 @@ class ReceiptCameraActivity: AppCompatActivity() {
                 val result = characterRecognition.recognition(request)
                 val receiptData: CapturedReceiptData = result.getOrElse { return@launch }
                 Log.d(TAG, receiptData.toString())
+                if(receiptData.costs.isEmpty()) return@launch
+
+                // Start activity to save captured receipt data.
+                val intent = Intent(applicationContext, ReceiptRegisterActivity::class.java)
+                val gson = Gson()
+                val data = gson.toJson(receiptData) ?: return@launch
+                intent.putExtra("CaptureDataString", data)
+                startActivity(intent)
+                finish()
             }
         }
 

@@ -20,4 +20,6 @@
     <string name="ItemSaveButtonText">保存</string>
     <string name="Detail">詳細：</string>
     <string name="DetailHint">詳細を入力</string>
+    <string name="SaveButton">Save</string>
+    <string name="CancelButton">Cancel</string>
 </resources>
