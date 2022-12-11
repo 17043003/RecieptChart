@@ -1,5 +1,6 @@
 package com.ishzk.android.recieptchart.model
 
+import androidx.databinding.InverseMethod
 import java.util.*
 
 data class Receipt(
@@ -65,5 +66,18 @@ data class CapturedReceiptData(
     val costs: List<CapturedCost>,
     val date: Date,
 )
+
+object ReceiptDataConverter {
+    @JvmStatic
+    @InverseMethod("inverseToInt")
+    fun toString(value: Int?): String {
+        return value?.toString() ?: ""
+    }
+
+    @JvmStatic
+    fun inverseToInt(value: String?): Int? {
+        return value?.toInt()
+    }
+}
 
 class CaptureError(errorMessage: String): Error(errorMessage)
