@@ -72,7 +72,6 @@ class ReceiptCameraActivity: AppCompatActivity() {
                 val data = gson.toJson(receiptData) ?: return@launch
                 intent.putExtra("CaptureDataString", data)
                 startActivity(intent)
-                finish()
             }
         }
 

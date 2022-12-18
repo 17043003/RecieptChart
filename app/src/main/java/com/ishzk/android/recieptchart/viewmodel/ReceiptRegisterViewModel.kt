@@ -26,6 +26,9 @@ class ReceiptRegisterViewModel: ViewModel() {
     private val _isSaved = MutableLiveData(false)
     val isSaved:LiveData<Boolean> = _isSaved
 
+    private val _isCanceled = MutableLiveData<Boolean>(false)
+    val isCanceled: LiveData<Boolean> = _isCanceled
+
     var userId: String = ""
 
     fun saveHouseholds(){
@@ -53,6 +56,10 @@ class ReceiptRegisterViewModel: ViewModel() {
                 _isSaved.postValue(true)
             }
         }
+    }
+
+    fun clickedCancel(){
+        _isCanceled.postValue(true)
     }
 
     companion object {

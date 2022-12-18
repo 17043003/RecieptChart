@@ -88,12 +88,16 @@ class ReceiptRegisterActivity: AppCompatActivity() {
                     window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 }
             }
-        }
 
-        lifecycleScope.launchWhenStarted {
             viewModel.isSaved.observe(this@ReceiptRegisterActivity) {
                 if(it){
                     Toast.makeText(this@ReceiptRegisterActivity, "保存を完了しました", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+            }
+
+            viewModel.isCanceled.observe(this@ReceiptRegisterActivity){
+                if(it){
                     finish()
                 }
             }
