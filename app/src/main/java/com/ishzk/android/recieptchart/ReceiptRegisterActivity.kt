@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -92,6 +93,7 @@ class ReceiptRegisterActivity: AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
             viewModel.isSaved.observe(this@ReceiptRegisterActivity) {
                 if(it){
+                    Toast.makeText(this@ReceiptRegisterActivity, "保存を完了しました", Toast.LENGTH_LONG).show()
                     finish()
                 }
             }
