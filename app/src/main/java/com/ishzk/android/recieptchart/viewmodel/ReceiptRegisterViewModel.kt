@@ -1,6 +1,7 @@
 package com.ishzk.android.recieptchart.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,6 @@ import com.ishzk.android.recieptchart.model.Household
 import com.ishzk.android.recieptchart.model.HouseholdRepository
 import com.ishzk.android.recieptchart.model.ItemKind
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -18,7 +18,14 @@ import java.util.*
 class ReceiptRegisterViewModel: ViewModel() {
     lateinit var repository: HouseholdRepository
     val receiptData = MutableLiveData<CapturedReceiptData>()
-    val isSaving = MutableStateFlow(false)
+    val registerDate = MutableLiveData<Date>()
+
+    private val _isSaving = MutableLiveData(false)
+    val isSaving: LiveData<Boolean> = _isSaving
+
+    private val _isSaved = MutableLiveData(false)
+    val isSaved:LiveData<Boolean> = _isSaved
+
     var userId: String = ""
 
     fun saveHouseholds(){
@@ -27,9 +34,9 @@ class ReceiptRegisterViewModel: ViewModel() {
 
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
-                isSaving.emit(true)
+                _isSaving.postValue(true)
 
-                val date = receiptData.value?.date ?: Date()
+                val date = registerDate.value ?: Date()
                 receiptData.value?.costs?.forEach { data ->
                     val item = Household(
                         "",
@@ -41,7 +48,9 @@ class ReceiptRegisterViewModel: ViewModel() {
                     )
                     repository.addItem(item)
                 }
-                isSaving.emit(false)
+
+                _isSaving.postValue(false)
+                _isSaved.postValue(true)
             }
         }
     }

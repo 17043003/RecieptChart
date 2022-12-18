@@ -1,11 +1,16 @@
 package com.ishzk.android.recieptchart
 
+import android.app.DatePickerDialog
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -17,6 +22,9 @@ import com.ishzk.android.recieptchart.model.CapturedCost
 import com.ishzk.android.recieptchart.model.CapturedReceiptData
 import com.ishzk.android.recieptchart.repository.FirestoreRepository
 import com.ishzk.android.recieptchart.viewmodel.ReceiptRegisterViewModel
+import com.ishzk.android.recieptchart.viewmodel.toDate
+import com.ishzk.android.recieptchart.viewmodel.toLocalDate
+import java.time.LocalDate
 
 class ReceiptRegisterActivity: AppCompatActivity() {
     val viewModel: ReceiptRegisterViewModel by viewModels()
@@ -44,10 +52,49 @@ class ReceiptRegisterActivity: AppCompatActivity() {
                 .getValue(getString(R.string.preference_file_key), getString(R.string.user_id))
         }
 
+        val decoration = object : RecyclerView.ItemDecoration(){
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                super.getItemOffsets(outRect, view, parent, state)
+                val margin = 24
+                outRect.set(margin / 2, 0, margin / 2, margin)
+            }
+        }
+
         // attach captured receipt data list to recycler view.
         binding.registerItemRecyclerView.let {
             it.adapter = adapter
             it.layoutManager = LinearLayoutManager(this)
+            it.addItemDecoration(decoration)
+        }
+
+        // set date picker listener to date edit.
+        val today = viewModel.receiptData.value?.date?.toLocalDate() ?: LocalDate.now()
+        binding.registerDate.setOnClickListener {
+            DatePickerDialog(this, { _, y, m, d ->
+                viewModel.registerDate.value = LocalDate.of(y, m + 1, d).toDate()
+            }, today.year, today.monthValue - 1, today.dayOfMonth).show()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.isSaving.observe(this@ReceiptRegisterActivity) {
+                if(it) {
+                    // being saved, activity does not react.
+                    window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.isSaved.observe(this@ReceiptRegisterActivity) {
+                if(it){
+                    finish()
+                }
+            }
         }
     }
 

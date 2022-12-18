@@ -22,4 +22,7 @@
     <string name="DetailHint">詳細を入力</string>
     <string name="SaveButton">Save</string>
     <string name="CancelButton">Cancel</string>
+    <string name="CapturedCost">値段</string>
+    <string name="CapturedDescription">商品詳細</string>
+    <string name="RegisterDate">日時</string>
 </resources>
