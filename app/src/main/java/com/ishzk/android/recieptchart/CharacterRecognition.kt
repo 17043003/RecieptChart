@@ -78,6 +78,7 @@ class CharacterRecognition {
                 if(values.size >= 2) {
                     capturedCosts.add(
                         CapturedCost(
+                            id = capturedCosts.size,
                             cost = values[2].toInt(),
                             description = values[1]
                         )

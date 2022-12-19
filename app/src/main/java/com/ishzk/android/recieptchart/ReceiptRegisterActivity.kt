@@ -11,6 +11,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,12 +26,14 @@ import com.ishzk.android.recieptchart.repository.FirestoreRepository
 import com.ishzk.android.recieptchart.viewmodel.ReceiptRegisterViewModel
 import com.ishzk.android.recieptchart.viewmodel.toDate
 import com.ishzk.android.recieptchart.viewmodel.toLocalDate
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.*
 
 class ReceiptRegisterActivity: AppCompatActivity() {
     val viewModel: ReceiptRegisterViewModel by viewModels()
     private lateinit var binding: ActivityReceiptRegisterBinding
-    private val adapter = RegisterItemAdapter()
+    private val adapter by lazy { RegisterItemAdapter(viewModel, this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +51,9 @@ class ReceiptRegisterActivity: AppCompatActivity() {
             Log.d(TAG, captureDataString)
 
             viewModel.repository = FirestoreRepository()
-            viewModel.receiptData.value = capturedData
+            viewModel.registerCosts.value = capturedData.costs
+            viewModel.registerDate.value = capturedData.date
+
             viewModel.userId = SharedPreference(this)
                 .getValue(getString(R.string.preference_file_key), getString(R.string.user_id))
         }
@@ -74,7 +79,7 @@ class ReceiptRegisterActivity: AppCompatActivity() {
         }
 
         // set date picker listener to date edit.
-        val today = viewModel.receiptData.value?.date?.toLocalDate() ?: LocalDate.now()
+        val today = viewModel.registerDate.value?.toLocalDate() ?: LocalDate.now()
         binding.registerDate.setOnClickListener {
             DatePickerDialog(this, { _, y, m, d ->
                 viewModel.registerDate.value = LocalDate.of(y, m + 1, d).toDate()
@@ -107,8 +112,15 @@ class ReceiptRegisterActivity: AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        adapter.submitList(viewModel.receiptData.value?.costs)
+        adapter.submitList(viewModel.registerCosts.value)
         adapter.notifyDataSetChanged()
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.registerCosts.observe(this@ReceiptRegisterActivity){
+                adapter.submitList(viewModel.registerCosts.value)
+                adapter.notifyDataSetChanged()
+            }
+        }
     }
 
     companion object {
@@ -116,20 +128,22 @@ class ReceiptRegisterActivity: AppCompatActivity() {
     }
 }
 
-class RegisterItemAdapter: ListAdapter<CapturedCost, RegisterItemListViewHolder>(CALL_BACK){
+class RegisterItemAdapter(private val viewModel: ReceiptRegisterViewModel, private val lifecycleOwner: LifecycleOwner): ListAdapter<CapturedCost, RegisterItemListViewHolder>(CALL_BACK){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RegisterItemListViewHolder {
         val view = ItemRegisterRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RegisterItemListViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RegisterItemListViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), viewModel, lifecycleOwner)
     }
 }
 
 class RegisterItemListViewHolder(private val binding: ItemRegisterRecyclerviewBinding): RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: CapturedCost){
+    fun bind(item: CapturedCost, viewModel: ReceiptRegisterViewModel, lifecycleOwner: LifecycleOwner){
         binding.receiptItem = item
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = lifecycleOwner
     }
 }
 
@@ -138,15 +152,13 @@ val CALL_BACK = object : DiffUtil.ItemCallback<CapturedCost>() {
         oldItem: CapturedCost,
         newItem: CapturedCost
     ): Boolean {
-//        return oldItem == newItem
-        return false
+        return oldItem == newItem
     }
 
     override fun areItemsTheSame(
         oldItem: CapturedCost,
         newItem: CapturedCost
     ): Boolean {
-//        return oldItem == newItem
-        return false
+        return oldItem.id == newItem.id
     }
 }

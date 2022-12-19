@@ -58,12 +58,13 @@ data class PlacedText(
 )
 
 data class CapturedCost(
+    val id: Int,
     val cost: Int,
     val description: String,
 )
 
 data class CapturedReceiptData(
-    val costs: List<CapturedCost>,
+    val costs: MutableList<CapturedCost>,
     val date: Date,
 )
 

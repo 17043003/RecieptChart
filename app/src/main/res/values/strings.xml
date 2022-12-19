@@ -25,4 +25,5 @@
     <string name="CapturedCost">値段</string>
     <string name="CapturedDescription">商品詳細</string>
     <string name="RegisterDate">日時</string>
+    <string name="DeleteCapturedDataButton">読み取り結果削除ボタン</string>
 </resources>

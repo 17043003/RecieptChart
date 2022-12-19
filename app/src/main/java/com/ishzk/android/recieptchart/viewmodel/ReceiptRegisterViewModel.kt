@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
-import com.ishzk.android.recieptchart.model.CapturedReceiptData
-import com.ishzk.android.recieptchart.model.Household
-import com.ishzk.android.recieptchart.model.HouseholdRepository
-import com.ishzk.android.recieptchart.model.ItemKind
+import com.ishzk.android.recieptchart.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -17,8 +14,8 @@ import java.util.*
 
 class ReceiptRegisterViewModel: ViewModel() {
     lateinit var repository: HouseholdRepository
-    val receiptData = MutableLiveData<CapturedReceiptData>()
     val registerDate = MutableLiveData<Date>()
+    val registerCosts = MutableLiveData<List<CapturedCost>>()
 
     private val _isSaving = MutableLiveData(false)
     val isSaving: LiveData<Boolean> = _isSaving
@@ -40,7 +37,7 @@ class ReceiptRegisterViewModel: ViewModel() {
                 _isSaving.postValue(true)
 
                 val date = registerDate.value ?: Date()
-                receiptData.value?.costs?.forEach { data ->
+                registerCosts.value?.forEach { data ->
                     val item = Household(
                         "",
                         data.cost,
@@ -60,6 +57,12 @@ class ReceiptRegisterViewModel: ViewModel() {
 
     fun clickedCancel(){
         _isCanceled.postValue(true)
+    }
+
+    fun removeItem(item: CapturedCost){
+        val mutableList = registerCosts.value?.toMutableList() ?: mutableListOf()
+        mutableList.remove(item)
+        registerCosts.postValue(mutableList)
     }
 
     companion object {
