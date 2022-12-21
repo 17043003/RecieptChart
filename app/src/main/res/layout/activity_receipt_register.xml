@@ -5,6 +5,8 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="com.ishzk.android.recieptchart.viewmodel.ReceiptRegisterViewModel" />
+        <import type="com.ishzk.android.recieptchart.model.DateConverter" />
         <variable
             name="viewModel"
             type="com.ishzk.android.recieptchart.viewmodel.ReceiptRegisterViewModel" />
@@ -60,7 +62,7 @@
             android:inputType="date"
             android:minHeight="48dp"
             android:focusable="false"
-            android:text="@{viewModel.registerDate.toString()}"
+            android:text="@{DateConverter.toString(viewModel.registerDate)}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:autofillHints="" />

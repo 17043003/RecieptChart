@@ -10,7 +10,6 @@
         <variable
             name="viewModel"
             type="com.ishzk.android.recieptchart.viewmodel.ReceiptRegisterViewModel" />
-        <import type="com.ishzk.android.recieptchart.model.ReceiptDataConverter" />
     </data>
 
 
@@ -24,32 +23,31 @@
             android:layout_height="wrap_content"
             app:cardUseCompatPadding="true">
 
-            <EditText
+            <TextView
                 android:id="@+id/editCost"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:autofillHints=""
                 android:ems="10"
+                android:gravity="center_vertical"
                 android:hint="@string/CapturedCost"
-                android:inputType="number"
                 android:minHeight="48dp"
-                android:text="@{ReceiptDataConverter.toString(receiptItem.cost)}"
+                android:text="@{String.valueOf(receiptItem.cost)}"
                 android:textColorHint="#757575"
                 app:layout_constraintEnd_toStartOf="@+id/itemDeleteButton"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
+            <TextView
                 android:id="@+id/editDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:autofillHints=""
                 android:ems="10"
-                android:gravity="start|top"
+                android:gravity="center_vertical"
                 android:hint="@string/CapturedDescription"
-                android:inputType="textMultiLine"
                 android:minHeight="48dp"
                 android:text="@{receiptItem.description}"
                 android:textColorHint="#757575"

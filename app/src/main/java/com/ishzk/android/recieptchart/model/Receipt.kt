@@ -1,6 +1,6 @@
 package com.ishzk.android.recieptchart.model
 
-import androidx.databinding.InverseMethod
+import java.text.SimpleDateFormat
 import java.util.*
 
 data class Receipt(
@@ -68,16 +68,11 @@ data class CapturedReceiptData(
     val date: Date,
 )
 
-object ReceiptDataConverter {
+object DateConverter{
     @JvmStatic
-    @InverseMethod("inverseToInt")
-    fun toString(value: Int?): String {
-        return value?.toString() ?: ""
-    }
-
-    @JvmStatic
-    fun inverseToInt(value: String?): Int? {
-        return value?.toInt()
+    fun toString(date: Date): String {
+        val formatter = SimpleDateFormat("yyyy/MM/dd")
+        return formatter.format(date)
     }
 }
 

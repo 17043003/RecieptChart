@@ -11,7 +11,6 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,14 +25,12 @@ import com.ishzk.android.recieptchart.repository.FirestoreRepository
 import com.ishzk.android.recieptchart.viewmodel.ReceiptRegisterViewModel
 import com.ishzk.android.recieptchart.viewmodel.toDate
 import com.ishzk.android.recieptchart.viewmodel.toLocalDate
-import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.util.*
 
 class ReceiptRegisterActivity: AppCompatActivity() {
     val viewModel: ReceiptRegisterViewModel by viewModels()
     private lateinit var binding: ActivityReceiptRegisterBinding
-    private val adapter by lazy { RegisterItemAdapter(viewModel, this) }
+    private val adapter by lazy { RegisterItemAdapter(viewModel) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +79,7 @@ class ReceiptRegisterActivity: AppCompatActivity() {
         val today = viewModel.registerDate.value?.toLocalDate() ?: LocalDate.now()
         binding.registerDate.setOnClickListener {
             DatePickerDialog(this, { _, y, m, d ->
-                viewModel.registerDate.value = LocalDate.of(y, m + 1, d).toDate()
+                viewModel.registerDate.postValue(LocalDate.of(y, m + 1, d).toDate())
             }, today.year, today.monthValue - 1, today.dayOfMonth).show()
         }
 
@@ -128,22 +125,21 @@ class ReceiptRegisterActivity: AppCompatActivity() {
     }
 }
 
-class RegisterItemAdapter(private val viewModel: ReceiptRegisterViewModel, private val lifecycleOwner: LifecycleOwner): ListAdapter<CapturedCost, RegisterItemListViewHolder>(CALL_BACK){
+class RegisterItemAdapter(private val viewModel: ReceiptRegisterViewModel): ListAdapter<CapturedCost, RegisterItemListViewHolder>(CALL_BACK){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RegisterItemListViewHolder {
         val view = ItemRegisterRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RegisterItemListViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RegisterItemListViewHolder, position: Int) {
-        holder.bind(getItem(position), viewModel, lifecycleOwner)
+        holder.bind(getItem(position), viewModel)
     }
 }
 
 class RegisterItemListViewHolder(private val binding: ItemRegisterRecyclerviewBinding): RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: CapturedCost, viewModel: ReceiptRegisterViewModel, lifecycleOwner: LifecycleOwner){
+    fun bind(item: CapturedCost, viewModel: ReceiptRegisterViewModel){
         binding.receiptItem = item
         binding.viewModel = viewModel
-        binding.lifecycleOwner = lifecycleOwner
     }
 }
 
