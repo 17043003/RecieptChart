@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="receiptItem"
+            type="com.ishzk.android.recieptchart.model.CapturedCost" />
+        <variable
+            name="viewModel"
+            type="com.ishzk.android.recieptchart.viewmodel.ReceiptRegisterViewModel" />
+    </data>
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardUseCompatPadding="true">
+
+            <TextView
+                android:id="@+id/editCost"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="@string/CapturedCost"
+                android:minHeight="48dp"
+                android:text="@{String.valueOf(receiptItem.cost)}"
+                android:textColorHint="#757575"
+                app:layout_constraintEnd_toStartOf="@+id/itemDeleteButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/editDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="@string/CapturedDescription"
+                android:minHeight="48dp"
+                android:text="@{receiptItem.description}"
+                android:textColorHint="#757575"
+                app:layout_constraintEnd_toEndOf="@+id/editCost"
+                app:layout_constraintStart_toStartOf="@+id/editCost"
+                app:layout_constraintTop_toBottomOf="@+id/editCost" />
+
+            <Button
+                android:id="@+id/itemDeleteButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:onClick="@{() -> viewModel.removeItem(receiptItem)}"
+                android:background="@drawable/ic_baseline_delete_24"
+                android:contentDescription="@string/DeleteCapturedDataButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

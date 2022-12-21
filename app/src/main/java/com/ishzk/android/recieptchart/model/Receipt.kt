@@ -1,5 +1,6 @@
 package com.ishzk.android.recieptchart.model
 
+import java.text.SimpleDateFormat
 import java.util.*
 
 data class Receipt(
@@ -57,13 +58,22 @@ data class PlacedText(
 )
 
 data class CapturedCost(
+    val id: Int,
     val cost: Int,
     val description: String,
 )
 
 data class CapturedReceiptData(
-    val costs: List<CapturedCost>,
+    val costs: MutableList<CapturedCost>,
     val date: Date,
 )
+
+object DateConverter{
+    @JvmStatic
+    fun toString(date: Date): String {
+        val formatter = SimpleDateFormat("yyyy/MM/dd")
+        return formatter.format(date)
+    }
+}
 
 class CaptureError(errorMessage: String): Error(errorMessage)
