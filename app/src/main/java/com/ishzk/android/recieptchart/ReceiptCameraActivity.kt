@@ -44,6 +44,8 @@ class ReceiptCameraActivity: AppCompatActivity() {
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.lifecycleOwner = this
+
         // After capture button clicked.
         viewModel.cameraOutputOptions.observe(this){
             val imageCapture = imageCapture ?: return@observe
@@ -62,6 +64,8 @@ class ReceiptCameraActivity: AppCompatActivity() {
             val request = characterRecognition.createRequest(base64Bitmap)
             lifecycleScope.launch {
                 val result = characterRecognition.recognition(request)
+                viewModel.isTakingPicture.postValue(false)
+
                 val receiptData: CapturedReceiptData = result.getOrElse { return@launch }
                 Log.d(TAG, receiptData.toString())
                 if(receiptData.costs.isEmpty()) return@launch
