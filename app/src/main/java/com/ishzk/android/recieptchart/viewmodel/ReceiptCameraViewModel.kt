@@ -19,9 +19,12 @@ const val TAG = "ReceiptCameraViewModel"
 class ReceiptCameraViewModel(application: Application) : AndroidViewModel(application) {
     val cameraOutputOptions = MutableLiveData<ImageCapture.OutputFileOptions>()
     val takenPictureUri = MutableLiveData<Uri>()
+    val isTakingPicture = MutableLiveData(false)
 
     fun captureReceipt(){
         Log.d(TAG, "Capture button is touched.")
+        isTakingPicture.postValue(true)
+
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
             .format(System.currentTimeMillis())
         val contentValues = ContentValues().apply {
