@@ -63,6 +63,7 @@ class HouseholdFragment: Fragment() {
             val today = Date()
             selectedYear.value = today.year + 1900
             selectedMonth.value = today.month + 1
+            selectedDate.value = today
         }
 
         return binding.root
@@ -72,12 +73,12 @@ class HouseholdFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // fetch items on recycler view.
-        binding.selectYearMonth.selectedMonth.observe(viewLifecycleOwner){
+        binding.selectYearMonth.selectedDate.observe(viewLifecycleOwner){
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.isFetching.value = true
 
-                viewModel.fetchMonthlyItems(binding.selectYearMonth.selectedDate).collect{
-                    Log.d(TAG, "Fetch date: ${binding.selectYearMonth.selectedDate}")
+                viewModel.fetchMonthlyItems(it).collect{
+                    Log.d(TAG, "Fetch date: $it")
                     listAdapter.submitList(it)
                 }
 

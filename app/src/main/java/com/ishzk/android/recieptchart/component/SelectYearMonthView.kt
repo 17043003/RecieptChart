@@ -15,8 +15,9 @@ class SelectYearMonthView : LinearLayout {
     private val binding by lazy { ViewSelectyearmonthBinding.inflate(LayoutInflater.from(context), this, true) }
     val selectedYear by lazy { MutableLiveData<Int>() }
     val selectedMonth by lazy { MutableLiveData<Int>() }
-    val selectedDate: Date
+    private val _selectedDate: Date
         get() = Date((selectedYear.value ?: 2022) - 1900, (selectedMonth.value ?: 1) - 1, 1)
+    val selectedDate by lazy { MutableLiveData<Date>() }
 
     init {
         binding.nextMonthButton.setOnClickListener{
@@ -25,6 +26,8 @@ class SelectYearMonthView : LinearLayout {
 
             selectedMonth.value = if(currentMonth == 12) 1 else currentMonth + 1
             selectedYear.value = if(currentMonth == 12) currentYear + 1 else currentYear
+
+            selectedDate.value = _selectedDate
 
             binding.selectedYearMonthText.text = "${selectedYear.value}/${(selectedMonth.value ?: 1)}"
         }
@@ -35,6 +38,8 @@ class SelectYearMonthView : LinearLayout {
 
             selectedMonth.value = if(currentMonth == 1) 12 else currentMonth - 1
             selectedYear.value = if(currentMonth == 1) currentYear - 1 else currentYear
+
+            selectedDate.value = _selectedDate
 
             binding.selectedYearMonthText.text = "${selectedYear.value}/${(selectedMonth.value ?: 1)}"
         }
