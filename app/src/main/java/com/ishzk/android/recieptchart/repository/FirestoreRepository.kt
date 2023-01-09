@@ -9,6 +9,8 @@ import com.ishzk.android.recieptchart.model.HouseholdRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class FirestoreRepository: HouseholdRepository {
     private val db by lazy { Firebase.firestore }
@@ -137,6 +139,23 @@ class FirestoreRepository: HouseholdRepository {
                 )
             }
         }
+    }
+
+    override suspend fun deleteItem(userID: String, itemID: String): Boolean {
+        val result = withContext(Dispatchers.Default){
+            db.collection("users")
+                .document(userID)
+                .collection("items")
+                .document(itemID)
+                .delete()
+        }
+
+        return suspendCoroutine { continuation ->
+            result.addOnCompleteListener {
+                continuation.resume(it.isSuccessful)
+            }
+        }
+
     }
 
     companion object {
