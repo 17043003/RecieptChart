@@ -1,10 +1,10 @@
 package com.ishzk.android.recieptchart.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -26,7 +26,7 @@ class HouseholdFragment: Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModels<HouseholdViewModel>()
 
-    private val listAdapter: ListItemAdapter by lazy { ListItemAdapter() }
+    private val listAdapter: ListItemAdapter by lazy { ListItemAdapter(viewModel) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,14 +75,13 @@ class HouseholdFragment: Fragment() {
         // fetch items on recycler view.
         binding.selectYearMonth.selectedDate.observe(viewLifecycleOwner){
             viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.isFetching.value = true
+                viewModel.fetchMonthlyItems(it)
+            }
+        }
 
-                viewModel.fetchMonthlyItems(it).collect{
-                    Log.d(TAG, "Fetch date: $it")
-                    listAdapter.submitList(it)
-                }
-
-                viewModel.isFetching.value = false
+        viewModel.fetchedItems.observe(viewLifecycleOwner){
+            viewLifecycleOwner.lifecycleScope.launch{
+                listAdapter.submitList(it)
             }
         }
     }
@@ -98,20 +97,21 @@ class HouseholdFragment: Fragment() {
     }
 }
 
-class ListItemAdapter: ListAdapter<Household, ItemListViewHolder>(DIFF_UTIL_ITEM_CALLBACK){
+class ListItemAdapter(val viewModel: HouseholdViewModel): ListAdapter<Household, ItemListViewHolder>(DIFF_UTIL_ITEM_CALLBACK){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemListViewHolder {
         val view = ItemRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ItemListViewHolder(view)
+        return ItemListViewHolder(view, viewModel)
     }
 
     override fun onBindViewHolder(holder: ItemListViewHolder, position: Int) {
         holder.bind(getItem(position))
         holder.setOnClickListener(getItem(position).id)
+        holder.setOnLongClickListener(getItem(position).id)
     }
 }
 
-class ItemListViewHolder(private val binding: ItemRecyclerviewBinding):
+class ItemListViewHolder(private val binding: ItemRecyclerviewBinding, private val viewModel: HouseholdViewModel):
     RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Household){
             binding.apply {
@@ -126,6 +126,21 @@ class ItemListViewHolder(private val binding: ItemRecyclerviewBinding):
             binding.root.setOnClickListener {
                 it.findNavController().
                 navigate(HouseholdFragmentDirections.actionHouseholdFragmentToNewHouseholdFragment(id))
+            }
+        }
+
+        fun setOnLongClickListener(id: String){
+            binding.root.setOnLongClickListener {
+                AlertDialog.Builder(binding.root.context)
+                    .setTitle("削除確認")
+                    .setMessage("削除してよろしいですか？")
+                    .setPositiveButton("OK"){ _, _ ->
+                        viewModel.deleteItem(id)
+                    }
+                    .setNeutralButton("キャンセル"){ _, _ ->
+                    }.show()
+
+                true
             }
         }
 }
