@@ -7,4 +7,5 @@ interface HouseholdRepository {
     suspend fun fetchItems(userID: String): List<Household>
     suspend fun fetchPeriodicItems(userID: String, start: Date, end: Date): List<Household>
     suspend fun fetchItem(userID: String, itemID: String): Household?
+    suspend fun deleteItem(userID: String, itemID: String): Boolean
 }
