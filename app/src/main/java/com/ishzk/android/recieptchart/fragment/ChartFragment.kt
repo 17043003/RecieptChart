@@ -1,6 +1,5 @@
 package com.ishzk.android.recieptchart.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,16 +7,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.google.firebase.Timestamp
-import com.ishzk.android.recieptchart.BarChartData
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.ishzk.android.recieptchart.R
 import com.ishzk.android.recieptchart.SharedPreference
 import com.ishzk.android.recieptchart.databinding.FragmentChartBinding
 import com.ishzk.android.recieptchart.repository.FirestoreRepository
 import com.ishzk.android.recieptchart.viewmodel.*
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 class ChartFragment: Fragment() {
@@ -38,32 +37,54 @@ class ChartFragment: Fragment() {
         viewModel._userID = SharedPreference(requireActivity())
             .getValue(getString(R.string.preference_file_key), getString(R.string.user_id))
 
+        // set initial date to select year month custom view.
+        with(binding.selectYearMonth) {
+            val today = Date()
+            selectedYear.value = today.year + 1900
+            selectedMonth.value = today.month + 1
+            selectedDate.value = today
+        }
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         viewLifecycleOwner.lifecycleScope.launch {
             val today = Date()
-            viewModel.fetchWeekItems(today).collect{
-                val x = (0..it.size).toList().map { it.toFloat() } // X軸データ
-                val chartData = BarChartData()
-                val dataSet = chartData.prepareData(x, it.map { cost -> cost.toFloat() })
-                val barData = chartData.prepareDataset(dataSet)
-
-                val days = today.daysOfWeek()
-                binding.dailyBarChart.apply {
-                    data = barData
-                    xAxis.isEnabled = true
-                    xAxis.textColor = Color.BLACK
-                    xAxis.valueFormatter = IndexAxisValueFormatter(
-                        days.map { date ->
-                            val sdf = SimpleDateFormat("MM/dd")
-                            sdf.format(date)
-                        })
+            viewModel.fetchMonthlyItems(today)
+            viewModel.fetchedTotals.observe(viewLifecycleOwner){ items ->
+                val entries = items.map {
+                    PieEntry(it.value.toFloat(), it.key)
                 }
-                binding.dailyBarChart.invalidate()
+
+                val pieDataSet = PieDataSet(entries, "")
+                with(pieDataSet){
+                    colors = ColorTemplate.COLORFUL_COLORS.toList()
+                    valueTextSize = 16f
+
+                }
+
+                val pieData = PieData(pieDataSet)
+                with(binding.dailyPieChart){
+                    data = pieData
+                    centerText = "種別ごと一か月の合計"
+                }
+                binding.dailyPieChart.invalidate()
+            }
+
+            viewModel.total.observe(viewLifecycleOwner){ sum->
+                with(binding.dailyPieChart){
+                    centerText = "種別ごと一か月の合計\n${sum}円"
+                }
+            }
+        }
+
+        binding.selectYearMonth.selectedDate.observe(viewLifecycleOwner){
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.fetchMonthlyItems(it)
             }
         }
     }
