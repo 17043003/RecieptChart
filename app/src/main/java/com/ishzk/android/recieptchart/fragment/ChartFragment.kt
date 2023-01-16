@@ -31,8 +31,6 @@ class ChartFragment: Fragment() {
     ): View? {
         _binding = FragmentChartBinding.inflate(inflater, container, false)
 
-        binding.chartTitle.text = "Weekly chart"
-
         viewModel._repository = FirestoreRepository()
         viewModel._userID = SharedPreference(requireActivity())
             .getValue(getString(R.string.preference_file_key), getString(R.string.user_id))
@@ -71,6 +69,7 @@ class ChartFragment: Fragment() {
                 with(binding.dailyPieChart){
                     data = pieData
                     centerText = "種別ごと一か月の合計"
+                    description.isEnabled = false
                 }
                 binding.dailyPieChart.invalidate()
             }
