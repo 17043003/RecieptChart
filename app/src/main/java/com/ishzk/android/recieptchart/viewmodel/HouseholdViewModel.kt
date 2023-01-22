@@ -22,6 +22,7 @@ class HouseholdViewModel: ViewModel() {
     val fetchedItems = MutableLiveData(listOf<Household>())
     val fetchedItemsEachDay = MutableLiveData<List<ItemsEachDay>>()
     val isFetching by lazy { MutableLiveData(false) }
+    val totalOfMonth = MutableLiveData(0)
 
     suspend fun fetchItems() = withContext(Dispatchers.Default) {
         val userID = _userID
@@ -63,8 +64,6 @@ class HouseholdViewModel: ViewModel() {
         val itemsEachDay = items.map { ItemsEachDay(it.key, it.value) }
 
         fetchedItemsEachDay.postValue(itemsEachDay)
-
-//        fetchedItems.postValue(items)
     }
 
     fun deleteItem(id: String){
@@ -82,6 +81,16 @@ class HouseholdViewModel: ViewModel() {
                 } ?: listOf()
                 fetchedItemsEachDay.postValue(deletedList)
             }
+        }
+    }
+
+    fun updateTotal() {
+        viewModelScope.launch {
+            totalOfMonth.postValue(
+                fetchedItemsEachDay.value?.sumOf { eachDayItems ->
+                    eachDayItems.item.sumOf { item -> item.cost }
+                }
+            )
         }
     }
 }
