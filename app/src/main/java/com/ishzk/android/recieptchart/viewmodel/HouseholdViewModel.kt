@@ -1,8 +1,10 @@
 package com.ishzk.android.recieptchart.viewmodel
 
+import android.app.LauncherActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
 import com.ishzk.android.recieptchart.model.FetchMonthlyHouseholdsEachDayUseCase
 import com.ishzk.android.recieptchart.model.Household
 import com.ishzk.android.recieptchart.model.HouseholdRepository
@@ -18,6 +20,7 @@ class HouseholdViewModel: ViewModel() {
     private val repository by lazy { _repository!! }
     var _userID = ""
     val fetchedItems = MutableLiveData(listOf<Household>())
+    val fetchedItemsEachDay = MutableLiveData<List<ItemsEachDay>>()
     val isFetching by lazy { MutableLiveData(false) }
 
     suspend fun fetchItems() = withContext(Dispatchers.Default) {
@@ -57,7 +60,11 @@ class HouseholdViewModel: ViewModel() {
         val items = usecase(userID, today)
         isFetching.postValue(false)
 
-        fetchedItems.postValue(items)
+        val itemsEachDay = items.map { ItemsEachDay(it.key, it.value) }
+
+        fetchedItemsEachDay.postValue(itemsEachDay)
+
+//        fetchedItems.postValue(items)
     }
 
     fun deleteItem(id: String){
@@ -65,9 +72,15 @@ class HouseholdViewModel: ViewModel() {
         viewModelScope.launch {
             val result = repository.deleteItem(userID, id)
             if(result) {
-                val list = fetchedItems.value?.toMutableList() ?: mutableListOf()
-                list.removeIf{ it.id == id }
-                fetchedItems.postValue(list)
+                fetchedItems.postValue(fetchedItems.value?.filter { it.id != id })
+
+                val deletedList = fetchedItemsEachDay.value?.map {
+                    ItemsEachDay(
+                        it.day,
+                        it.item.filter { item -> item.id != id }
+                    )
+                } ?: listOf()
+                fetchedItemsEachDay.postValue(deletedList)
             }
         }
     }
@@ -75,3 +88,8 @@ class HouseholdViewModel: ViewModel() {
 
 fun Date.beginDay(): Date = Date(year, month, date, 0, 0)
 fun Date.endDay(): Date = Date(year, month, date, 23, 59)
+
+data class ItemsEachDay(
+    val day: Timestamp,
+    val item: List<Household>,
+)

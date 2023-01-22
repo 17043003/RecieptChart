@@ -1,5 +1,6 @@
 package com.ishzk.android.recieptchart.model
 
+import com.google.firebase.Timestamp
 import com.ishzk.android.recieptchart.viewmodel.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -8,12 +9,14 @@ import java.util.*
 class FetchMonthlyHouseholdsEachDayUseCase {
     lateinit var repository: HouseholdRepository
 
-    suspend operator fun invoke(userID: String, date: Date): List<Household> = withContext(Dispatchers.Default) {
-        repository.fetchPeriodicItems(
+    suspend operator fun invoke(userID: String, date: Date): Map<Timestamp, List<Household>> = withContext(Dispatchers.Default) {
+        val items = repository.fetchPeriodicItems(
             userID,
             date.beginDayOfMonth(),
             date.endDayOfMonth().endDay()
         )
+
+        items.groupBy { it.date }
     }
 }
 
