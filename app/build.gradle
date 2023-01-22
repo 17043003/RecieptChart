@@ -78,6 +78,7 @@ dependencies {
     implementation "com.michael-bull.kotlin-result:kotlin-result:1.1.16"
     implementation "com.michael-bull.kotlin-result:kotlin-result-coroutines:1.1.16"
     implementation "androidx.cardview:cardview:1.0.0"
+    implementation 'com.github.cachapa:ExpandableLayout:2.9.2'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'io.mockk:mockk:1.10.5'
