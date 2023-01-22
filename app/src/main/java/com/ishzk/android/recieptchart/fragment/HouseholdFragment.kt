@@ -103,6 +103,13 @@ class HouseholdFragment: Fragment() {
         viewModel.fetchedItemsEachDay.observe(viewLifecycleOwner){
             viewLifecycleOwner.lifecycleScope.launch {
                 cardListAdapter.submitList(it)
+                viewModel.updateTotal()
+            }
+
+            viewModel.totalOfMonth.observe(viewLifecycleOwner) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    binding.totalOfMonth.text = "月の合計：" + (it ?: 0).toString()
+                }
             }
         }
     }
