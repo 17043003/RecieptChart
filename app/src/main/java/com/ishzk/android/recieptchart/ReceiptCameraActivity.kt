@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -79,6 +80,26 @@ class ReceiptCameraActivity: AppCompatActivity() {
             }
         }
 
+        val launcher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ){ result ->
+            if(result.resultCode != RESULT_OK) return@registerForActivityResult
+
+            result.data?.data?.also {
+                viewModel.isTakingPicture.postValue(true)
+                viewModel.takenPictureUri.postValue(it)
+            }
+        }
+        val pickPhotoIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            type = "image/*"
+        }
+
+        viewModel.pushedPickButton.observe(this){
+            if(it) {
+                launcher.launch(pickPhotoIntent)
+            }
+        }
+
         binding.viewModel = viewModel
 
         if(allPermissionsGranted()){
@@ -127,6 +148,7 @@ class ReceiptCameraActivity: AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == REQUEST_CODE_PERMISSIONS){
             if(allPermissionsGranted()){
                 startCamera()
@@ -153,5 +175,3 @@ class ReceiptCameraActivity: AppCompatActivity() {
 
 val AndroidViewModel.context: Context
   get() = getApplication()
-
-
