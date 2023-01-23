@@ -20,6 +20,7 @@ class ReceiptCameraViewModel(application: Application) : AndroidViewModel(applic
     val cameraOutputOptions = MutableLiveData<ImageCapture.OutputFileOptions>()
     val takenPictureUri = MutableLiveData<Uri>()
     val isTakingPicture = MutableLiveData(false)
+    val pushedPickButton = MutableLiveData(false)
 
     fun captureReceipt(){
         Log.d(TAG, "Capture button is touched.")
@@ -43,6 +44,7 @@ class ReceiptCameraViewModel(application: Application) : AndroidViewModel(applic
 
     fun pickImageFile(){
         Log.d(TAG, "Select image floating button is pushed.")
+        pushedPickButton.postValue(true)
     }
 
     val saveImageCallback = object : ImageCapture.OnImageSavedCallback{
