@@ -66,7 +66,7 @@ class FirestoreRepository: HouseholdRepository {
                     it.data?.get("cost").toString().toIntOrNull() ?: 0,
                     timeStamp,
                     it.data?.get("kind").toString(),
-                    "",
+                    it.data?.get("description").toString(),
                     it.data?.get("userID").toString()
                 )
                 itemList.add(item)
@@ -105,7 +105,7 @@ class FirestoreRepository: HouseholdRepository {
                     it.data?.get("cost").toString().toIntOrNull() ?: 0,
                     timeStamp,
                     it.data?.get("kind").toString(),
-                    "",
+                    it.data?.get("description").toString(),
                     it.data?.get("userID").toString()
                 )
                 itemList.add(item)
@@ -134,7 +134,7 @@ class FirestoreRepository: HouseholdRepository {
                     it.get("cost").toString().toIntOrNull() ?: 0,
                     timeStamp,
                     it.get("kind").toString(),
-                    "",
+                    it.get("description").toString(),
                     it.get("userID").toString()
                 )
             }
