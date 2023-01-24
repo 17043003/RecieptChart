@@ -1,6 +1,8 @@
 package com.ishzk.android.recieptchart
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -104,6 +107,33 @@ class ReceiptRegisterActivity: AppCompatActivity() {
                 }
             }
         }
+
+        lifecycleScope.launchWhenCreated {
+            val launcher = registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()
+            ){ result ->
+                if(result.resultCode == Activity.RESULT_OK){
+                    val editedItem = result.data?.extras?.let {extra ->
+                        CapturedCost(
+                            extra.get(RESPONSE_ID).toString().toInt(),
+                            extra.get(RESPONSE_COST).toString().toInt(),
+                            extra.get(RESPONSE_DESCRIPTION).toString(),
+                        )
+                    } ?: return@registerForActivityResult
+
+                    viewModel.updateItem(editedItem)
+                }
+            }
+
+            viewModel.willBeEdited.observe(this@ReceiptRegisterActivity){
+                // start edit item activity.
+                val intent = Intent(application, ReceiptEditActivity::class.java)
+                intent.putExtra(REQUEST_ID, it.id)
+                intent.putExtra(REQUEST_COST, it.cost)
+                intent.putExtra(REQUEST_DESCRIPTION, it.description)
+                launcher.launch(intent)
+            }
+        }
     }
 
     override fun onStart() {
@@ -122,6 +152,13 @@ class ReceiptRegisterActivity: AppCompatActivity() {
 
     companion object {
         const val TAG = "ReceiptRegisterActivity"
+        const val REQUEST_ID = "ReceiptID"
+        const val REQUEST_COST = "EditedCost"
+        const val REQUEST_DESCRIPTION = "EditedDescription"
+
+        const val RESPONSE_ID = "ReceiptID"
+        const val RESPONSE_COST = "ReceiptCost"
+        const val RESPONSE_DESCRIPTION = "ReceiptDescription"
     }
 }
 

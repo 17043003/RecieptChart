@@ -26,6 +26,12 @@ class ReceiptRegisterViewModel: ViewModel() {
     private val _isCanceled = MutableLiveData<Boolean>(false)
     val isCanceled: LiveData<Boolean> = _isCanceled
 
+    private val _willBeEdited = MutableLiveData<CapturedCost>()
+    val willBeEdited: LiveData<CapturedCost> = _willBeEdited
+
+    private val _editedItem = MutableLiveData<CapturedCost>()
+    val editedItem: LiveData<CapturedCost> = _editedItem
+
     var userId: String = ""
 
     fun saveHouseholds(){
@@ -57,6 +63,27 @@ class ReceiptRegisterViewModel: ViewModel() {
 
     fun clickedCancel(){
         _isCanceled.postValue(true)
+    }
+
+    fun clickedItemToEdit(item: CapturedCost){
+        val selectedItem = registerCosts.value?.find { it.id == item.id } ?: return
+        _willBeEdited.postValue(selectedItem)
+    }
+
+    fun updateItem(item: CapturedCost){
+        val editedList = registerCosts.value?.map {
+            if(it.id == item.id){
+                CapturedCost(
+                    item.id,
+                    item.cost,
+                    item.description
+                )
+            }else{
+                it
+            }
+        } ?: listOf()
+
+        registerCosts.postValue(editedList)
     }
 
     fun removeItem(item: CapturedCost){
