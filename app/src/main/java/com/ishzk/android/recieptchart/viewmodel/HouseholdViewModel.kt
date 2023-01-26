@@ -1,10 +1,8 @@
 package com.ishzk.android.recieptchart.viewmodel
 
-import android.app.LauncherActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.Timestamp
 import com.ishzk.android.recieptchart.model.FetchMonthlyHouseholdsEachDayUseCase
 import com.ishzk.android.recieptchart.model.Household
 import com.ishzk.android.recieptchart.model.HouseholdRepository
@@ -99,6 +97,6 @@ fun Date.beginDay(): Date = Date(year, month, date, 0, 0)
 fun Date.endDay(): Date = Date(year, month, date, 23, 59)
 
 data class ItemsEachDay(
-    val day: Timestamp,
+    val day: Date,
     val item: List<Household>,
 )

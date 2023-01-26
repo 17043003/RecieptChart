@@ -212,7 +212,7 @@ class CardItemListViewHolder(private val binding: ItemEachDayCardBinding, privat
     fun bind(item: ItemsEachDay){
         binding.apply {
             val formatter = SimpleDateFormat("yyyy/MM/dd", Locale.JAPAN)
-            cardItemDate.text = formatter.format(item.day.toDate())
+            cardItemDate.text = formatter.format(item.day)
             totalEachDay.text = item.item.sumOf { it.cost }.toString()
             eachDayItemList.apply {
                 adapter = listAdapter
