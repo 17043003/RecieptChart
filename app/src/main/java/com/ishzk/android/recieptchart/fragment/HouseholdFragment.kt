@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.*
 import com.ishzk.android.recieptchart.R
@@ -74,11 +76,15 @@ class HouseholdFragment: Fragment() {
         }
 
         // set initial date to select year month custom view.
-        with(binding.selectYearMonth) {
-            val today = Date()
-            selectedYear.value = today.year + 1900
-            selectedMonth.value = today.month + 1
-            selectedDate.value = today
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                with(binding.selectYearMonth) {
+                    val today = Date()
+                    selectedYear.value = today.year + 1900
+                    selectedMonth.value = today.month + 1
+                    selectedDate.value = today
+                }
+            }
         }
 
         return binding.root
