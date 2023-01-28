@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.ishzk.android.recieptchart.databinding.ViewSelectyearmonthBinding
 import java.util.Date
@@ -41,6 +42,10 @@ class SelectYearMonthView : LinearLayout {
 
             selectedDate.value = _selectedDate
 
+            binding.selectedYearMonthText.text = "${selectedYear.value}/${(selectedMonth.value ?: 1)}"
+        }
+
+        selectedDate.observe(context as LifecycleOwner){
             binding.selectedYearMonthText.text = "${selectedYear.value}/${(selectedMonth.value ?: 1)}"
         }
 
