@@ -80,6 +80,8 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.github.cachapa:ExpandableLayout:2.9.2'
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'io.mockk:mockk:1.10.5'
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
