@@ -36,6 +36,7 @@
                 android:minHeight="48dp"
                 android:text="@{String.valueOf(receiptItem.cost)}"
                 android:textColorHint="#757575"
+                style="@style/ListItemText"
                 app:layout_constraintEnd_toStartOf="@+id/itemDeleteButton"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -52,6 +53,7 @@
                 android:minHeight="48dp"
                 android:text="@{receiptItem.description}"
                 android:textColorHint="#757575"
+                style="@style/ListItemText"
                 app:layout_constraintEnd_toEndOf="@+id/editCost"
                 app:layout_constraintStart_toStartOf="@+id/editCost"
                 app:layout_constraintTop_toBottomOf="@+id/editCost" />

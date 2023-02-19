@@ -20,13 +20,14 @@
             android:id="@+id/cardItemDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            style="@style/ListItemText.CardItemText"
             tools:text="2023/01/19" />
 
         <TextView
             android:id="@+id/totalEachDay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/ListItemText.CardItemText"
             android:textSize="20sp"
             tools:text="20000" />
 

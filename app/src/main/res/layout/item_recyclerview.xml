@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textSize="16sp"
+        style="@style/ListItemText"
         app:layout_constraintEnd_toStartOf="@+id/itemCostText"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,7 @@
         android:id="@+id/itemCostText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        style="@style/ListItemText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/itemKindText"
@@ -30,9 +30,9 @@
 
     <TextView
         android:id="@+id/itemDescriptionText"
+        style="@style/ListItemText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemKindText"
